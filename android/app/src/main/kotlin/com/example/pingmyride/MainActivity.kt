@@ -1,0 +1,5 @@
+package com.chandra.pingmyride
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
