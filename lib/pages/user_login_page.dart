@@ -35,10 +35,16 @@ class _UserLoginPageState extends State<UserLoginPage> {
     }
     final normalized = phone.startsWith('+') ? phone : '+91$phone';
     if (auth != null) {
-      await auth!.sendOtp(normalized);
+      final result = await auth!.sendOtp(normalized);
+      if (!mounted) return;
+      if (result != null) {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => OtpVerificationPage(phoneNumber: normalized)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Failed to send OTP')));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Authentication not available')));
     }
-  if (!mounted) return;
-  Navigator.of(context).push(MaterialPageRoute(builder: (_) => OtpVerificationPage(phoneNumber: normalized)));
   }
 
   @override
@@ -73,10 +79,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
                             if (!mounted) return;
                             if (uid != null) {
                               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => UserHomePage(userName: 'Google User')));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Google sign-in failed')));
                             }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Authentication not available')));
                           }
                         },
-                        icon: Image.asset('assets/google_logo.png', height: 20),
+                        icon: Icon(Icons.account_circle, size: 20),
                         label: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 12),
                           child: Text('Continue with Google', style: TextStyle(fontSize: 16)),

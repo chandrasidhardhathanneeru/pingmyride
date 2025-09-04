@@ -24,7 +24,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
   Future<void> _verify() async {
     final code = _controllers.map((c) => c.text).join();
-    bool ok = true;
+    bool ok = false;
     if (widget.authService != null) {
       // This sample doesn't keep verificationId; in a real flow you'd pass it.
       ok = await widget.authService!.verifyOtp('verificationId', code);
@@ -34,7 +34,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     if (ok) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => UserHomePage(userName: widget.phoneNumber)));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid OTP')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid OTP or authentication not available')));
     }
   }
 

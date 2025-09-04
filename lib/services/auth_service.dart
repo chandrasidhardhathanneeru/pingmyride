@@ -10,12 +10,20 @@ abstract class AuthService {
 }
 
 class FirebaseAuthService implements AuthService {
-  final fb.FirebaseAuth _auth = fb.FirebaseAuth.instance;
-  // GoogleSignIn usage removed for now to avoid incompatibilities with package
-  // versions; implement platform-specific Google sign-in flow as needed.
+  fb.FirebaseAuth? _auth;
+
+  FirebaseAuthService() {
+    try {
+      _auth = fb.FirebaseAuth.instance;
+    } catch (e) {
+      print('Firebase Auth not available: $e');
+      _auth = null;
+    }
+  }
 
   @override
   Future<String?> signInWithGoogle() async {
+    if (_auth == null) return null;
   // Placeholder implementation: Google sign-in requires the google_sign_in
   // package flow to obtain tokens, then authenticate with Firebase.
   // Return null for now; replace with a proper implementation matching
@@ -25,13 +33,14 @@ class FirebaseAuthService implements AuthService {
 
   @override
   Future<String?> sendOtp(String phoneNumber) async {
+    if (_auth == null) return null;
     final completer = Completer<String?>();
     try {
-      await _auth.verifyPhoneNumber(
+      await _auth!.verifyPhoneNumber(
         phoneNumber: phoneNumber,
         verificationCompleted: (fb.PhoneAuthCredential credential) async {
           // Auto-retrieval or instant verification
-          final userCred = await _auth.signInWithCredential(credential);
+          final userCred = await _auth!.signInWithCredential(credential);
           if (userCred.user != null) {
             completer.complete('auto');
           }
@@ -54,9 +63,10 @@ class FirebaseAuthService implements AuthService {
 
   @override
   Future<bool> verifyOtp(String verificationId, String smsCode) async {
+    if (_auth == null) return false;
     try {
       final credential = fb.PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
-      final userCred = await _auth.signInWithCredential(credential);
+      final userCred = await _auth!.signInWithCredential(credential);
       return userCred.user != null;
     } catch (e) {
       return false;

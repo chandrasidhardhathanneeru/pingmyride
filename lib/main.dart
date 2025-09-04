@@ -8,7 +8,12 @@ import 'pages/admin_login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  try {
+    await Firebase.initializeApp();
+  } catch (e) {
+    // Firebase initialization failed, continue without Firebase
+    print('Firebase initialization failed: $e');
+  }
   runApp(const PingMyRideApp());
 }
 
@@ -18,7 +23,7 @@ class PingMyRideApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final greenAccent = Colors.white;
+    final greenAccent = Colors.green[400]!;
 
   final auth = authService ?? defaultAuthService;
 
