@@ -103,6 +103,18 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     const Divider(color: Colors.white24),
                     const SizedBox(height: 18),
 
+                    // Demo bypass for local exploration without Firebase
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => UserHomePage(userName: 'Demo User'))),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                          child: Text('Skip login (demo)', style: TextStyle(color: Colors.white70)),
+                        ),
+                      ),
+                    ),
+
                     // Phone login
                         Align(alignment: Alignment.centerLeft, child: Text('Phone number', style: TextStyle(color: Colors.white.withAlpha((0.9 * 255).round())))),
                     const SizedBox(height: 8),
