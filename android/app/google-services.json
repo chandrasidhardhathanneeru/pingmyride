@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "953006189226",
+    "project_id": "pingmyride-82279",
+    "storage_bucket": "pingmyride-82279.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953006189226:android:f69b2b04b017be5ce37ed3",
+        "android_client_info": {
+          "package_name": "com.chandra.pingmyride"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB7RPbrvuuUMScGmMgI_L8CGTIuNPt-H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
