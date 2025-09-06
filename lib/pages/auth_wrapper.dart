@@ -16,19 +16,33 @@ class AuthWrapper extends StatelessWidget {
     return StreamBuilder<AppUser?>(
       stream: authService.authStateChanges,
       builder: (context, snapshot) {
+        print('AuthWrapper - Connection state: ${snapshot.connectionState}');
+        print('AuthWrapper - Has data: ${snapshot.hasData}');
+        print('AuthWrapper - Data: ${snapshot.data}');
+        print('AuthWrapper - Error: ${snapshot.error}');
+        
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Loading...'),
+                ],
+              ),
             ),
           );
         }
 
         final user = snapshot.data;
         if (user == null) {
+          print('AuthWrapper - No user, showing role selection');
           return RoleSelectionPage(authService: authService);
         }
 
+        print('AuthWrapper - User found: ${user.username} (${user.role})');
         // Navigate based on user role
         switch (user.role) {
           case UserRole.admin:

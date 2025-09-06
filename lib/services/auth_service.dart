@@ -137,17 +137,30 @@ class FirebaseAuthService implements AuthService {
   }
 
   Future<AppUser?> _getUserFromFirestore(String uid) async {
-    if (_firestore == null) return null;
+    if (_firestore == null) {
+      print('Firestore not available');
+      return null;
+    }
 
     try {
+      print('Fetching user data from Firestore for UID: $uid');
       final doc = await _firestore!.collection('users').doc(uid).get();
       if (doc.exists && doc.data() != null) {
-        return AppUser.fromMap(doc.data()!);
+        final userData = doc.data()!;
+        print('User data found: ${userData}');
+        return AppUser.fromMap(userData);
+      } else {
+        print('User document does not exist in Firestore for UID: $uid');
+        // If user doesn't exist in Firestore, sign them out to prevent loop
+        await signOut();
+        return null;
       }
     } catch (e) {
       print('Error getting user from Firestore: $e');
+      // If there's a database error, sign out to prevent authentication loop
+      await signOut();
+      return null;
     }
-    return null;
   }
 
   @override

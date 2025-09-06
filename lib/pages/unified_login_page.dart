@@ -107,8 +107,20 @@ class _UnifiedLoginPageState extends State<UnifiedLoginPage> {
         );
       }
 
-      if (user != null && mounted) {
-        Navigator.of(context).pushReplacementNamed('/');
+      if (user != null) {
+        // Authentication successful! 
+        // The AuthWrapper's StreamBuilder will automatically handle navigation
+        // to the appropriate home page based on the user's role
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(_isLogin 
+                ? 'Welcome back, ${user.username}!' 
+                : 'Account created successfully! Welcome, ${user.username}!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
