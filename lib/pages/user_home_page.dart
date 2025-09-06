@@ -6,10 +6,17 @@ import 'tickets_page.dart';
 import 'alerts_page.dart';
 import 'history_page.dart';
 import 'profile_page.dart';
+import '../services/auth_service.dart';
 
 class UserHomePage extends StatefulWidget {
   final String userName;
-  const UserHomePage({super.key, required this.userName});
+  final AuthService? authService;
+  
+  const UserHomePage({
+    super.key, 
+    required this.userName,
+    this.authService,
+  });
 
   @override
   State<UserHomePage> createState() => _UserHomePageState();
@@ -51,7 +58,7 @@ class _UserHomePageState extends State<UserHomePage> {
           IconButton(
             icon: const Icon(Icons.person_outline),
             tooltip: 'Profile',
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProfilePage(userName: widget.userName))),
+            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => ProfilePage(userName: widget.userName, authService: widget.authService))),
           )
         ],
       ),

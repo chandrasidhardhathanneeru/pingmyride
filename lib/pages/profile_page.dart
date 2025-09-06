@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
 
 class ProfilePage extends StatefulWidget {
   final String userName;
   final bool isDriver;
-  const ProfilePage({super.key, required this.userName, this.isDriver = false});
+  final AuthService? authService;
+  
+  const ProfilePage({
+    super.key, 
+    required this.userName, 
+    this.isDriver = false,
+    this.authService,
+  });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -249,7 +257,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: double.infinity,
                 child: TextButton(
                   style: TextButton.styleFrom(backgroundColor: Colors.white, foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
-                  onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+                  onPressed: () async {
+                    final authSvc = widget.authService ?? defaultAuthService;
+                    await authSvc.signOut();
+                    if (context.mounted) {
+                      Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+                    }
+                  },
                   child: const Text('Logout', style: TextStyle(fontSize: 16)),
                 ),
               ),

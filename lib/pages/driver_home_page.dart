@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
 import 'scan_page.dart';
+import '../services/auth_service.dart';
 
 class DriverHomePage extends StatefulWidget {
   final String driverName;
-  const DriverHomePage({super.key, this.driverName = 'Driver'});
+  final AuthService? authService;
+  
+  const DriverHomePage({
+    super.key, 
+    this.driverName = 'Driver',
+    this.authService,
+  });
 
   @override
   State<DriverHomePage> createState() => _DriverHomePageState();
@@ -171,7 +178,11 @@ class _DriverHomePageState extends State<DriverHomePage> {
   }
 
   Widget _profileView() {
-  return ProfilePage(userName: widget.driverName, isDriver: true);
+    return ProfilePage(
+      userName: widget.driverName, 
+      isDriver: true,
+      authService: widget.authService,
+    );
   }
 
   void _startScanning() {

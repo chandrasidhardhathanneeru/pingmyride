@@ -5,10 +5,19 @@ import 'admin_routes_page.dart';
 import 'admin_live_monitor_page.dart';
 import 'admin_bookings_page.dart';
 import 'admin_profile_page.dart';
+import 'create_account_page.dart';
+import 'view_accounts_page.dart';
+import '../services/auth_service.dart';
 
 class AdminHomePage extends StatelessWidget {
   final String adminName;
-  const AdminHomePage({super.key, this.adminName = 'Admin'});
+  final AuthService? authService;
+  
+  const AdminHomePage({
+    super.key, 
+    this.adminName = 'Admin',
+    this.authService,
+  });
 
   Widget _tile(BuildContext context, String title, String subtitle, Widget page) {
     return GestureDetector(
@@ -62,6 +71,16 @@ class AdminHomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.account_circle),
             onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const AdminProfilePage(adminName: 'Admin User', adminEmail: 'admin@example.com'))),
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              final authSvc = authService ?? defaultAuthService;
+              await authSvc.signOut();
+              if (context.mounted) {
+                Navigator.of(context).pushNamedAndRemoveUntil('/', (route) => false);
+              }
+            },
           ),
         ],
       ),
@@ -139,6 +158,8 @@ class AdminHomePage extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Column(
                   children: [
+                    _tile(context, 'Create Account', 'Add new users to the system', const CreateAccountPage()),
+                    _tile(context, 'View Accounts', 'View all user accounts', const ViewAccountsPage()),
                     _tile(context, 'Buses', 'Manage buses', const AdminBusesPage()),
                     _tile(context, 'Drivers', 'Manage drivers & assign', const AdminDriversPage()),
                     _tile(context, 'Routes & Schedules', 'Manage routes and schedules', const AdminRoutesPage()),
